@@ -22,7 +22,7 @@ def _es6_consumer(ctx):
 
     return [DefaultInfo(
         files = es6_sources,
-        runfiles = ctx.runfiles(es6_sources.to_list()),
+        runfiles = ctx.runfiles(transitive_files = es6_sources),
     )]
 
 es6_consumer = rule(

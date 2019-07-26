@@ -1,0 +1,35 @@
+load("@build_bazel_rules_nodejs//internal/golden_file_test:golden_file_test.bzl", "golden_file_test")
+load("@npm_bazel_rollup//:index.from_src.bzl", "rollup_bundle")
+
+[
+    rollup_bundle(
+        name = "bundle.%s" % format,
+        srcs = [
+            "bar.js",
+            "some.json",
+        ],
+        config_file = "rollup.config.js",
+        entry_point = ":foo.js",
+        format = format,
+        deps = [
+            "//packages/rollup/test/fum:fumlib",
+            "@npm//hello",
+        ],
+    )
+    for format in [
+        "cjs",
+        "umd",
+    ]
+]
+
+golden_file_test(
+    name = "golden_cjs_test",
+    actual = "bundle.cjs.js",
+    golden = "golden.cjs.js_",
+)
+
+golden_file_test(
+    name = "golden_umd_test",
+    actual = "bundle.umd.js",
+    golden = "golden.umd.js_",
+)
